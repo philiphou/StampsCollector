@@ -1,0 +1,17 @@
+{% extends 'base.html'%}
+{% block content %}
+<h1>Stamp Details</h1>
+<div class="card">
+    <div class="card-content">
+        <span class="card-title">{{stamp.name}}</span>
+        <p>Style:{{stamp.style}}</p>
+        <p>Description:{{stamp.description}}</p>
+        {%if s.release_year < 2000 %}
+          <p>Release Year:{{s.release_year}}</p>
+        {% else %}
+          <p>Release Year:This Century</p>
+        {% endif %}
+    
+    </div>
+</div>
+{% endblock%}

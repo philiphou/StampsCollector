@@ -3,7 +3,8 @@
 <h1>Stamp List</h1>
 {%for s in stamps%}
  <div class ="card">
-   <div class = "card-content">
+   <a href="{% url 'index' s.id %}">
+    <div class = "card-content">
      <span class="cart-title">{{s.name}}</span>
      <p>Style: {{s.style}}</p>
      <p>Description: {{s.description}}</p>
@@ -13,6 +14,7 @@
           <p>Release Year:This Century</p>
       {% endif %}
     </div>
+  </a>
  </div>
 {% endfor %}
 {% endblock %}
