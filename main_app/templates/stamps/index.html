@@ -3,16 +3,13 @@
 <h1>Stamp List</h1>
 {%for s in stamps%}
  <div class ="card">
-   <a href="{% url 'index' s.id %}">
+   <a href="{% url 'detail' s.id %}">
     <div class = "card-content">
      <span class="cart-title">{{s.name}}</span>
      <p>Style: {{s.style}}</p>
      <p>Description: {{s.description}}</p>
-      {%if s.release_year < 2000 %}
-          <p>Release Year:{{s.release_year}}</p>
-      {% else %}
-          <p>Release Year:This Century</p>
-      {% endif %}
+     <p>Country: {{s.country}}</p>
+     
     </div>
   </a>
  </div>
