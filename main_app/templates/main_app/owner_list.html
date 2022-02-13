@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h1>Owner List</h1>
+
+{% for owner in owner_list %}
+  <a href="{% url 'owners_detail' owner.id %}">
+    <div class="card">
+        <div class="card-content">
+            <span class="card-title">{{ owner.name }}</span>
+            <p>Postcode: {{ owner.postcode }}</p>
+        </div>
+    </div>
+  </a>
+{% endfor %}
+
+{% endblock %}

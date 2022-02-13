@@ -1,6 +1,7 @@
 from django.db import models
 from django.urls import reverse
-from datetime import date
+from django.contrib.auth.models import User
+
 
 
 VALUES=(
@@ -10,18 +11,28 @@ VALUES=(
 )
 
 # Create your models here.
+class Owner(models.Model):
+    name=models.CharField(max_length=100)
+    postcode=models.CharField(max_length=20)
+    def __str__(self):
+        return self.name
+    def get_absolute_url(self):
+        return reverse ('owners_detail',kwargs={'pk':self.id})
+
+
 class Stamp(models.Model):
     name = models.CharField(max_length=100)
     style = models.CharField(max_length=100)
     description = models.TextField(max_length=230)
     country=models.CharField(max_length=100,default='China')
+    owners=models.ManyToManyField(Owner)
+    user=models.ForeignKey(User,on_delete=models.CASCADE)
     def __str__(self):
         return self.name
  
     def get_absolute_url(self):
-        return reverse('detail', kwargs={'stampid': self.id})
-    def collected_for_today(self):
-          return self.feature_set.filter(date=date.today()).count() > 0
+        return reverse('detail', kwargs={'stamp_id': self.id})
+ 
 
 class Feature(models.Model):
     date=models.DateField()
@@ -37,3 +48,10 @@ class Feature(models.Model):
 
     class Meta:
         ordering = ['-date']
+
+class Photo(models.Model):
+    url = models.CharField(max_length=200)
+    stamp = models.ForeignKey(Stamp, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"Photo for cat_id: {self.stamp_id} @{self.url}"

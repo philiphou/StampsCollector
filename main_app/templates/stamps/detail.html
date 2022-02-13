@@ -17,8 +17,23 @@
         <a href="{% url 'stamp_update' stamp.id %}">Edit</a>
         <a href="{% url 'stamp_delete' stamp.id %}">Delete</a>
       </div>
+     
+    
+      {% for photo in stamp.photo_set.all %}
+        <img class="responsive-img card-panel" src="{{photo.url}}">
+      {% empty %}
+        <div class="card-panel teal-text center-align">No Photos Uploaded</div>
+      {% endfor %}
+        <form action="{% url 'add_photo' stamp.id %}" enctype="multipart/form-data" method="POST" class="card-panel">
+        {% csrf_token %}
+         <input type="file" name="photo-file">
+        <br><br>
+        <input type="submit" class="btn" value="Upload Photo">
+        </form>
+       </div>
+
+
     </div>
-  </div>
   <div class="col s6">
     <form action="{% url 'add_feature' stamp.id %}" method="post">
         {% csrf_token %}
@@ -26,11 +41,7 @@
         <input type="submit" class="btn" value="Add Feature">
       </form>
       <br>
-      {% if stamp.collected_for_today %}
-        <div class="card-panel teal-text center-align">{{stamp.name}} has been collected today</div>
-      {% else %}
-        <div class="card-panel red-text center-align">{{stamp.name}} is not collected today</div>
-      {% endif %}
+     
     <table class="striped">
       <thead>
         <tr><th>Date</th><th>Value</th></tr>
@@ -38,22 +49,64 @@
       <tbody>
         {% for feature in stamp.feature_set.all %}
           <tr>
-            <td>{{feature.date}}</td>
+            <td>{{feature.date.year}}</td>
             <td>{{feature.get_value_display}}</td>
           </tr>
         {% endfor %}
       </tbody>
     </table>
+   
   </div>
 </div>
+<hr>
+<div class="row">
+  <div class="col s6">
+    <h3>{{ stamp.name }}'s Owners</h3>
+    {% if stamp.owners.count %}
+      {% for owner in stamp.owners.all %}
+        <div class="card">
+          <div class="card-content">
+            <span class="card-title">
+              <span >{{ owner.name }}</span>
+            </span>
+          </div>
+        </div>
+      {% endfor %}
+    {% else %}
+      <h5>No Owners :(</h5>
+    {% endif %}
+  </div>
+  <div class="col s6">
+    <h3>Available Owners</h3>
+    {% if owners.count %}
+      {% for owner in owners.all %}
+        <div class="card">
+          <div class="card-content">
+            <span class="card-title">
+             {{ owner.name }}
+            </span>
+          </div>
+          <div class="card-action">
+            <form action="{% url 'assoc_owner' stamp.id owner.id %}" method="post">
+              {% csrf_token %}
+              <button type="submit" class="btn">Add</button>
+            </form>
+          </div>
+        </div>
+      {% endfor %}
+    {% else %}
+      <h5>{{stamp.name}} Already Has All Owners Available</h5>
+    {% endif %}
+  </div>
 <script>
-  var dateEl = document.getElementById('id_date');
+   var dateEl = document.getElementById('id_date');
   M.Datepicker.init(dateEl, {
     format: 'yyyy-mm-dd',
     defaultDate: new Date(),
     setDefaultDate: true,
     autoClose: true
   });
+
   var selectEl = document.getElementById('id_value');
   M.FormSelect.init(selectEl);
 </script>
